@@ -18,11 +18,11 @@ The file contents are expected to be a base64 encoded string stored in a Flow st
                 ],
 
 
-- Add a component to your page, any type, save it then change it's "componentType" to "FilePicker" in the metadata editor and save it.
+- Add a component to your page, any type, save it then change it's "componentType" to "FileDownloader" in the metadata editor and save it.
 e.g. 
             "componentType": "FileDownloader",
 
-- Add a String value to hold your flow's current progress e.g. "FileData".
+- Add a String value to hold your file's base64 data e.g. "FileData".
 
 - Set the component's "State" to a the new field (e.g. FileData). 
 
