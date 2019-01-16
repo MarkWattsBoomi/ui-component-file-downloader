@@ -2,7 +2,20 @@
 
 A component that shows an icon on a page which when clicked forces a file download.
 
-The file contents are expected to be a base64 encoded string stored in a Flow string value.
+There are two versions: -
+
+- FileDownloader - The state for the control should be a simple string field. The file contents are expected to be a base64 encoded into the state string.
+
+- FileDownloaderComplex - The state is a flow type defied like this: -
+
+        File Data
+        {
+                "Content"       String  Contains the base64 encoded binary data of the file
+                "File Name"     String  The name of the file used when pushing the file to the client
+                "Extension"     String  Optional - not used
+                "Size"          Number  Optional - not used
+                "MimeType"      String  Optional - not used
+        }
 
 
 ## Setup
@@ -20,9 +33,9 @@ The file contents are expected to be a base64 encoded string stored in a Flow st
 
 - Add a component to your page, any type, save it then change it's "componentType" to "FileDownloader" in the metadata editor and save it.
 e.g. 
-            "componentType": "FileDownloader",
+            "componentType": "FileDownloader" or "FileDownloaderComplex"
 
-- Add a String value to hold your file's base64 data e.g. "FileData".
+- Add a String value or type as defined above to hold your file's data e.g. "FileData".
 
 - Set the component's "State" to a the new field (e.g. FileData). 
 
