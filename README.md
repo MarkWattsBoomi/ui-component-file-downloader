@@ -20,7 +20,7 @@ There are two versions: -
 
 ## Setup
 
-- Grab the files from the /dist folder and import into your tenant.
+- Grab the files from the /build folder and import into your tenant.
 
 - Add the files to your player code like this: -
 
@@ -33,7 +33,7 @@ There are two versions: -
 
 - Add a component to your page, any type, save it then change it's "componentType" to "FileDownloader" in the metadata editor and save it.
 e.g. 
-            "componentType": "FileDownloader" or "FileDownloaderComplex"
+            "componentType": "file-downloader" or "file-downloader-complex"
 
 - Add a String value or type as defined above to hold your file's data e.g. "FileData".
 
@@ -43,6 +43,8 @@ e.g.
 ## Extra Configuration
 
 You can add attributes to the component to control it's appearance: -
+
+- Title  - String - The tooltip shown when the download icon is hovered.  "Download File" is the default.
 
 - Icon  - String - The name of a glyphicon to use as the download icon button e.g. "envelope".  "envelope" is the default.
 

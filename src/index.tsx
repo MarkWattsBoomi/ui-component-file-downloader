@@ -1,3 +1,2 @@
-export * from './FileDownloader';
-export * from './FileDownloaderComplex';
-
+export * from './file-downloader';
+export * from './file-downloader-complex';
