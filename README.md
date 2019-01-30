@@ -4,9 +4,9 @@ A component that shows an icon on a page which when clicked forces a file downlo
 
 There are two versions: -
 
-- FileDownloader - The state for the control should be a simple string field. The file contents are expected to be a base64 encoded into the state string.
+- file-downloader - The state for the control should be a simple string field. The file contents are expected to be a base64 encoded into the state string.
 
-- FileDownloaderComplex - The state is a flow type defied like this: -
+- file-downloader-complex - The state is a flow type defied like this: -
 
         File Data
         {
