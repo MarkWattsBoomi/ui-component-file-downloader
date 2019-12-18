@@ -1,8 +1,12 @@
 
 import * as React from 'react';
 import './file-downloader.css';
-import { eLoadingState } from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowBaseComponent';
-import {FlowComponent} from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowComponent';
+//import { FlowComponent, eLoadingState } from 'flow-component-model';
+//import "flow-component-model"
+import { FlowComponent, eLoadingState } from 'flow-component-model';
+//import { eLoadingState } from 'FlowBaseComponent';
+//import { eLoadingState } from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowBaseComponent';
+//import {FlowComponent} from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowComponent';
 declare const manywho: any;
 
 class FileDownloader extends FlowComponent {

@@ -1,9 +1,7 @@
 
 import * as React from 'react';
 import './file-downloader.css';
-import { FlowComponent } from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowComponent';
-import { FlowObjectData } from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowObjectData';
-import { eLoadingState } from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowBaseComponent';
+import { FlowComponent, eLoadingState, FlowObjectData } from 'flow-component-model';
 
 declare const manywho: any;
 
