@@ -1,35 +1,40 @@
 
 import * as React from 'react';
 import './file-downloader.css';
-import { IComponentProps, IManywho  } from './interfaces';
-import { component } from './utils/wrapper';
+import { eLoadingState } from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowBaseComponent';
+import {FlowComponent} from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowComponent';
+declare const manywho: any;
 
-declare const manywho: IManywho;
+class FileDownloader extends FlowComponent {
 
-class FileDownloader extends React.Component<IComponentProps, any> {
-
-    componentDidMount() {
+    async componentDidMount() {
+        await super.componentDidMount();
         this.forceUpdate();
     }
 
     render() {
 
-     if (this.props.state.loading) {
+     if (this.loadingState !== eLoadingState.ready) {
             return <div className="file-box"/>;
         }
 
-     const dataUri: string = 'data:binary/octet-stream;base64,' + this.props.getContentValue() as string;
+     const dataUri: string = 'data:binary/octet-stream;base64,' + this.getStateValue() as string;
 
-     const caption: string = this.props.getAttribute('Title') as string || 'Download File';
-     const icon: string = this.props.getAttribute('icon') as string || 'envelope';
+     const caption: string = this.getAttribute('title',"File Downloader");
+     const icon: string = this.getAttribute('icon','envelope');
      const className: string = 'glyphicon glyphicon-' + icon + ' icon-button';
-     const iconSize: number = this.props.getAttribute('pointSize') as number || 48;
+     const iconSize: number = parseInt(this.getAttribute('pointSize', '24'));
+     const outcome: string = this.getAttribute('onClickOutcome', '');
      const iconStyle: React.CSSProperties = { fontSize: iconSize + 'pt' };
 
      return (
         <div className="file-box" >
             <div className="file-box-body">
-                <a download="firmware" href={dataUri}>
+                <a 
+                    download="file" 
+                    href={dataUri}
+                    onClick={async (e: any) => {if(outcome.length > 0) {await this.triggerOutcome(outcome)}}}
+                >
                     <span className={className} style={iconStyle} title={caption}/>
                 </a>
             </div>

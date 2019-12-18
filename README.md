@@ -4,9 +4,9 @@ A component that shows an icon on a page which when clicked forces a file downlo
 
 There are two versions: -
 
-- file-downloader - The state for the control should be a simple string field. The file contents are expected to be a base64 encoded into the state string.
+- FileDownloader - The state for the control should be a simple string field. The file contents are expected to be a base64 encoded into the state string.
 
-- file-downloader-complex - The state is a flow type defied like this: -
+- FileDownloaderComplex - The state is a flow type defied like this: -
 
         File Data
         {
@@ -20,7 +20,7 @@ There are two versions: -
 
 ## Setup
 
-- Grab the files from the /build folder and import into your tenant.
+- Grab the files from the /dist folder and import into your tenant.
 
 - Add the files to your player code like this: -
 
@@ -33,7 +33,7 @@ There are two versions: -
 
 - Add a component to your page, any type, save it then change it's "componentType" to "FileDownloader" in the metadata editor and save it.
 e.g. 
-            "componentType": "file-downloader" or "file-downloader-complex"
+            "componentType": "FileDownloader" or "FileDownloaderComplex"
 
 - Add a String value or type as defined above to hold your file's data e.g. "FileData".
 
@@ -44,8 +44,10 @@ e.g.
 
 You can add attributes to the component to control it's appearance: -
 
-- Title  - String - The tooltip shown when the download icon is hovered.  "Download File" is the default.
+- title  - String - The tooltip shown when the download icon is hovered.  "Download File" is the default.
 
-- Icon  - String - The name of a glyphicon to use as the download icon button e.g. "envelope".  "envelope" is the default.
+- icon  - String - The name of a glyphicon to use as the download icon button e.g. "cloud-download".  "envelope" is the default.
 
-- PointSize - Number - the pointsize to use for the icon e.g. 48 = 48pt.  48 is the default
+- pointSize - Number - the pointsize to use for the icon e.g. 48 = 48pt.  48 is the default.
+
+- onClickOutcome - String - the name of an outcome to trigger after the file downloads.  can be ommitted or blank.  default is none.

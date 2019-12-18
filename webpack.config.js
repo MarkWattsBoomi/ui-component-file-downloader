@@ -8,7 +8,7 @@ module.exports = function() {
     const config = {
         entry: "./src/index.tsx",
         output: {
-            filename: 'FileDownloader.js',
+            filename: flow.filenames.js,
             path: path.resolve(__dirname, 'build')
         },
         devtool: 'inline-source-map',
@@ -57,19 +57,12 @@ module.exports = function() {
         },
         plugins: [
             new WriteFilePlugin(),
-            new MiniCssExtractPlugin({ filename: "FileDownloader.css" })
+            new MiniCssExtractPlugin({ filename: flow.filenames.css })
         ],
     }
 
     if (!fs.existsSync('./build'))
         fs.mkdirSync('./build');
-
-    let template = fs.readFileSync('./template.html').toString();
-    template = template
-        .replace('{{tenantId}}', flow.tenantId)
-        .replace('{{flowId}}', flow.id)
-        .replace('{{flowVersionId}}', flow.versionId)
-    fs.writeFileSync('./build/index.html', template);
 
     return config;
 };
