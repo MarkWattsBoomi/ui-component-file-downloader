@@ -19,12 +19,21 @@ class FileDownloaderComplex extends FlowComponent {
 
         const od: FlowObjectData = this.getStateValue() as FlowObjectData;
 
-        const fileName: string = od.properties.FileName.value as string;
-        const extension: string = od.properties.Extension.value as string;
-        const size: number = od.properties.Size.value as number;
-        const mimeType: string = od.properties.MimeType.value as string;
+        let fileName: string;
+        let extension: string;
+        let size: number = 0;
+        let mimeType: string;
+        let dataUri: string = 'data:binary/octet-stream;base64,';
 
-        const dataUri: string = 'data:binary/octet-stream;base64,' + od.properties.Content.value as string;
+        if(od) {
+            fileName = od.properties.FileName.value as string;
+            extension = od.properties.Extension.value as string;
+            size = od.properties.Size.value as number;
+            mimeType = od.properties.MimeType.value as string;
+            dataUri += od.properties.Content.value as string;
+        }
+
+        
 
         const caption: string = this.getAttribute('title',"File Downloader");
         const icon: string = this.getAttribute('icon','envelope');
@@ -37,7 +46,7 @@ class FileDownloaderComplex extends FlowComponent {
         <div className="file-box"  >
             <div className="file-box-body">
                 <a 
-                    download={fileName} 
+                    download={fileName + "." + extension} 
                     href={dataUri}
                     onClick={async (e: any) => {if(outcome.length > 0) {await this.triggerOutcome(outcome)}}}
                 >
