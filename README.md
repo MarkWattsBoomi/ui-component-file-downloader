@@ -11,11 +11,62 @@ There are two versions: -
         File Data
         {
                 "Content"       String  Contains the base64 encoded binary data of the file
-                "File Name"     String  The name of the file used when pushing the file to the client
+                "FileName"      String  The name of the file used when pushing the file to the client
                 "Extension"     String  Optional - not used
                 "Size"          Number  Optional - not used
                 "MimeType"      String  Optional - not used
         }
+
+        or use this JSON
+
+        {
+        "bindings": null,
+        "developerName": "FileData",
+        "developerSummary": "",
+        "elementType": "TYPE",
+        "id": null,
+        "properties": [
+            {
+                "contentFormat": "",
+                "contentType": "ContentString",
+                "developerName": "Content",
+                "id": null,
+                "typeElementDeveloperName": null,
+                "typeElementId": null
+            },
+            {
+                "contentFormat": "",
+                "contentType": "ContentString",
+                "developerName": "FileName",
+                "id": null,
+                "typeElementDeveloperName": null,
+                "typeElementId": null
+            },
+            {
+                "contentFormat": "",
+                "contentType": "ContentString",
+                "developerName": "Extension",
+                "id": null,
+                "typeElementDeveloperName": null,
+                "typeElementId": null
+            },
+            {
+                "contentFormat": "",
+                "contentType": "ContentNumber",
+                "developerName": "Size",
+                "id": null,
+                "typeElementDeveloperName": null,
+                "typeElementId": null
+            },
+            {
+                "contentFormat": "",
+                "contentType": "ContentString",
+                "developerName": "MimeType",
+                "id": null,
+                "typeElementDeveloperName": null,
+                "typeElementId": null
+            }
+        ]
 
 
 ## Setup
