@@ -2,11 +2,9 @@
 
 A component that shows an icon on a page which when clicked forces a file download.
 
-There are two versions: -
+## Classes
 
-- FileDownloader - The state for the control should be a simple string field. The file contents are expected to be a base64 encoded into the state string.
-
-- FileDownloaderComplex - The state is a flow type defied like this: -
+FileDownloaderComplex - The state is a flow type defied like this: -
 
         File Data
         {
@@ -84,9 +82,9 @@ There are two versions: -
 
 - Add a component to your page, any type, save it then change it's "componentType" to "FileDownloader" in the metadata editor and save it.
 e.g. 
-            "componentType": "FileDownloader" or "FileDownloaderComplex"
+            "componentType": "FileDownloader" 
 
-- Add a String value or type as defined above to hold your file's data e.g. "FileData".
+- Add a type as defined above to hold your file's data e.g. "FileData".
 
 - Set the component's "State" to a the new field (e.g. FileData). 
 
