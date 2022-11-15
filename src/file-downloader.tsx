@@ -3,7 +3,7 @@ import * as React from 'react';
 import './file-downloader.css';
 //import { FlowComponent, eLoadingState } from 'flow-component-model';
 //import "flow-component-model"
-import { FlowComponent, eLoadingState, FlowObjectData } from 'flow-component-model';
+import { FlowComponent, eLoadingState, FlowObjectData, eContentType } from 'flow-component-model';
 import { CSSProperties } from 'react';
 //import { eLoadingState } from 'FlowBaseComponent';
 //import { eLoadingState } from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowBaseComponent';
@@ -29,53 +29,82 @@ export default class FileDownloader extends FlowComponent {
 
     async downloadFile(e: any) {
 
-        const od: FlowObjectData = (this.getStateValue() as unknown) as FlowObjectData;
+       
 
         let fileName: string;
         let extension: string;
         let size: number = 0;
         let mimeType: string;
         let base64: string;
+        let dataAttributes: Map<string,string> = new Map();
 
-        // = 'data:binary/octet-stream;base64,';
-
-        if (od) {
-            fileName = od.properties.FileName.value as string;
-            extension = od.properties.Extension.value as string;
-            size = od.properties.Size.value as number;
-            mimeType = od.properties.MimeType.value as string;
-            base64 = (od.properties.Content.value as string);
-            if(base64.indexOf(',') >= 0){
-                base64=base64.split(',')[1];
-            }
+        let statetype: eContentType = this.getStateValueType();
+        switch(statetype){
+            case eContentType.ContentString:
+                base64 = this.getStateValue() as string;
+                fileName = this.getAttribute("fileName",new Date().getTime() + "");
+                extension = this.getAttribute("extension","txt")
+                mimeType = this.getAttribute("mimeType","text/plain")
+                break;
+            case eContentType.ContentObject:
+                const od: FlowObjectData = (this.getStateValue() as unknown) as FlowObjectData;
+                if (od) {
+                    fileName = od.properties.FileName.value as string;
+                    extension = od.properties.Extension.value as string;
+                    mimeType = od.properties.MimeType.value as string;
+                    base64 = (od.properties.Content.value as string);
+                }
+                break;
         }
-
-        // const byteString = Base64.encode(base64);
-        // const byteString = atob(base64);
-        const byteString = Buffer.from(base64, 'base64').toString('binary');
+        
+        if(base64.indexOf(',') >= 0){
+            let attrs: string=base64.split(',')[0];
+            let dataAttrs: string[] = attrs.split(";");
+            if(dataAttrs && dataAttrs.length > 0) {
+                for(let pos = 0 ; pos < dataAttrs.length ; pos++) {
+                    let dataAttrElements:string[] = dataAttrs[pos].split("=");
+                    if(dataAttrElements.length>0) {
+                        dataAttributes.set(dataAttrElements[0],dataAttrElements[1]?dataAttrElements[1]:"");
+                    }
+                    
+                }
+                
+            }
+            if(dataAttributes.has("data")) {
+                mimeType = dataAttributes.get("data")
+            }
+            base64=base64.split(',')[1];
+        }
+        
+        let byteString: string;
+        
+        if(dataAttributes.has("base64")){
+            byteString = Buffer.from(base64, 'base64').toString('binary');
+        }
+        else {
+            byteString = base64;
+        }
 
         const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        const blob = new Blob([ab], {type: mimeType});
+        //const ia = new Uint8Array(ab);
+        //for (let i = 0; i < byteString.length; i++) {
+        //    ia[i] = byteString.charCodeAt(i);
+        //}
+        const blob = new Blob([byteString], {type: mimeType});
 
-        const download = fileName + (extension.length > 0 ? '.' + extension : '');
+        const download = fileName + (extension?.length > 0 ? '.' + extension : '');
 
-        if (window.navigator.msSaveOrOpenBlob) {
-
-            // IE11
-            window.navigator.msSaveOrOpenBlob(blob, download);
-        } else {
-
-            // Google chome, Firefox, ....
-            const objectURL = URL.createObjectURL(blob);
-            this.anchor.download = download;
-            this.anchor.href = objectURL;
-            // this.anchor.click();
-
-        }
+        const link = document.createElement('a');
+        if (link.download !== undefined) { // feature detection
+                // Browsers that support HTML5 download attribute
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', fileName);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
 
         const outcome: string = this.getAttribute('onClickOutcome', '');
         if (outcome.length > 0) {
