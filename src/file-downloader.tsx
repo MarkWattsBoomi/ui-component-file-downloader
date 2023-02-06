@@ -1,13 +1,9 @@
 
 import * as React from 'react';
 import './file-downloader.css';
-//import { FlowComponent, eLoadingState } from 'flow-component-model';
-//import "flow-component-model"
 import { FlowComponent, eLoadingState, FlowObjectData, eContentType } from 'flow-component-model';
 import { CSSProperties } from 'react';
-//import { eLoadingState } from 'FlowBaseComponent';
-//import { eLoadingState } from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowBaseComponent';
-//import {FlowComponent} from '/Operational Data/Flow UI Custom Components/2019 Version/FlowComponentModel/src/FlowComponent';
+import {Buffer} from 'buffer';
 declare const manywho: any;
 
 export default class FileDownloader extends FlowComponent {
@@ -34,9 +30,10 @@ export default class FileDownloader extends FlowComponent {
         let fileName: string;
         let extension: string;
         let size: number = 0;
-        let mimeType: string;
+        let mimeTypeStr: string;
         let base64: string;
         let dataAttributes: Map<string,string> = new Map();
+        let dataUri: any;
 
         let statetype: eContentType = this.getStateValueType();
         switch(statetype){
@@ -44,19 +41,21 @@ export default class FileDownloader extends FlowComponent {
                 base64 = this.getStateValue() as string;
                 fileName = this.getAttribute("fileName",new Date().getTime() + "");
                 extension = this.getAttribute("extension","txt")
-                mimeType = this.getAttribute("mimeType","text/plain")
+                mimeTypeStr = this.getAttribute("mimeType","text/plain")
                 break;
             case eContentType.ContentObject:
                 const od: FlowObjectData = (this.getStateValue() as unknown) as FlowObjectData;
                 if (od) {
                     fileName = od.properties.FileName.value as string;
                     extension = od.properties.Extension.value as string;
-                    mimeType = od.properties.MimeType.value as string;
+                    mimeTypeStr = od.properties.MimeType.value as string;
                     base64 = (od.properties.Content.value as string);
+                    dataUri = base64;
                 }
                 break;
         }
         
+        /*
         if(base64.indexOf(',') >= 0){
             let attrs: string=base64.split(',')[0];
             let dataAttrs: string[] = attrs.split(";");
@@ -71,40 +70,31 @@ export default class FileDownloader extends FlowComponent {
                 
             }
             if(dataAttributes.has("data")) {
-                mimeType = dataAttributes.get("data")
+                mimeTypeStr = dataAttributes.get("data")
             }
             base64=base64.split(',')[1];
         }
-        
-        let byteString: string;
-        
-        if(dataAttributes.has("base64")){
-            byteString = Buffer.from(base64, 'base64').toString('binary');
-        }
-        else {
-            byteString = base64;
-        }
+*/
 
-        const ab = new ArrayBuffer(byteString.length);
-        //const ia = new Uint8Array(ab);
-        //for (let i = 0; i < byteString.length; i++) {
-        //    ia[i] = byteString.charCodeAt(i);
-        //}
-        const blob = new Blob([byteString], {type: mimeType});
+        let accept: any = {};
+        accept[mimeTypeStr] = "." + extension;
 
-        const download = fileName + (extension?.length > 0 ? '.' + extension : '');
-
-        const link = document.createElement('a');
-        if (link.download !== undefined) { // feature detection
-                // Browsers that support HTML5 download attribute
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-                link.setAttribute('download', fileName);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+        let pickerOpts: any = {
+            suggestedName: fileName,
+            types: [
+                {
+                    description: extension + ' files',
+                    accept: accept,
+                },
+            ],
+            excludeAcceptAllOption: true,
+            multiple: false,
+        };
+        const blob = await (await fetch(dataUri)).blob(); 
+        const fileHandle = await (window as any).showSaveFilePicker(pickerOpts);
+        const fileStream = await fileHandle.createWritable();
+        await fileStream.write(blob);
+        await fileStream.close();
 
         const outcome: string = this.getAttribute('onClickOutcome', '');
         if (outcome.length > 0) {
