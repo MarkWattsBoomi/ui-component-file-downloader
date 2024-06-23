@@ -38,7 +38,7 @@ export default class FileDownloader extends FlowComponent {
         let statetype: eContentType = this.getStateValueType();
         switch(statetype){
             case eContentType.ContentString:
-                base64 = this.getStateValue() as string;
+                dataUri = this.getStateValue() as string;
                 fileName = this.getAttribute("fileName",new Date().getTime() + "");
                 extension = this.getAttribute("extension","txt")
                 mimeTypeStr = this.getAttribute("mimeType","text/plain")
@@ -91,11 +91,30 @@ export default class FileDownloader extends FlowComponent {
             multiple: false,
         };
         const blob = await (await fetch(dataUri)).blob(); 
-        const fileHandle = await (window as any).showSaveFilePicker(pickerOpts);
-        const fileStream = await fileHandle.createWritable();
-        await fileStream.write(blob);
-        await fileStream.close();
 
+        // check availability and fallback if necessary
+        if (typeof (window as any).showSaveFilePicker !== 'function') {
+            const fileHandle = await (window as any).showSaveFilePicker(pickerOpts);
+            const fileStream = await fileHandle.createWritable();
+            await fileStream.write(blob);
+            await fileStream.close();        
+        }
+        else {
+            const blobURL = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobURL;
+            a.download = fileName;
+            a.style.display = 'none';
+            document.body.append(a);
+            // Programmatically click the element.
+            a.click();
+            // Revoke the blob URL and remove the element.
+            setTimeout(() => {
+                URL.revokeObjectURL(blobURL);
+                a.remove();
+            }, 1000);
+        }
+        
         const outcome: string = this.getAttribute('onClickOutcome', '');
         if (outcome.length > 0) {
             await this.triggerOutcome(outcome);
@@ -134,6 +153,7 @@ export default class FileDownloader extends FlowComponent {
 
         return (
             <div className={classes} >
+                <span>{this.model.label}</span>
                 <div className="file-box-body">
                 <a
                     href={'#'}
